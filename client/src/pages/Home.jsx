@@ -1,6 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHeart, FaPlay } from 'react-icons/fa';
+import {
+  FaArrowRight,
+  FaBolt,
+  FaCompactDisc,
+  FaFire,
+  FaHeadphones,
+  FaHeart,
+  FaPlay,
+  FaRedoAlt,
+  FaSearch,
+  FaStar,
+  FaWaveSquare,
+} from 'react-icons/fa';
 import api from '../api/axios';
 import useAuthStore from '../store/useAuthStore';
 import TrackCard from '../components/TrackCard';
@@ -404,7 +416,7 @@ function Home() {
   const rightPanelTrack = currentTrack || rightPanelTracks[0] || heroTrack;
 
   const rightPanel = (
-    <div className="rounded-[1.5rem] bg-slate-100/80 border border-slate-200 p-4">
+    <div className="rounded-[1.5rem] bg-slate-100/85 border border-slate-200 p-4 overflow-hidden">
       <div className="flex items-center justify-between gap-3 mb-4">
         <div className="min-w-0">
           <p className="text-xs text-slate-500 font-medium">
@@ -416,17 +428,35 @@ function Home() {
           </h3>
         </div>
 
-        <span className="w-9 h-9 rounded-xl bg-white shadow flex items-center justify-center shrink-0">
-          ♫
-        </span>
+        <div className="w-10 h-10 rounded-xl bg-slate-950 text-lime-300 shadow flex items-center justify-center shrink-0">
+          <FaWaveSquare />
+        </div>
       </div>
 
-      <div className="rounded-[1.25rem] overflow-hidden bg-white shadow-sm mb-4">
+      <div className="relative rounded-[1.25rem] overflow-hidden bg-white shadow-sm mb-4 group">
         <img
           src={getTrackCoverUrl(rightPanelTrack)}
           alt={rightPanelTrack?.title || 'Now playing'}
-          className="w-full h-44 object-cover"
+          className="w-full h-44 object-cover group-hover:scale-105 transition duration-500"
         />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
+        <button
+          type="button"
+          onClick={() => rightPanelTrack && handlePlay(rightPanelTrack)}
+          disabled={!rightPanelTrack}
+          className="absolute left-4 bottom-4 w-12 h-12 rounded-full bg-lime-300 text-slate-950 flex items-center justify-center shadow-lg disabled:opacity-50"
+        >
+          <FaPlay className="text-sm ml-1" />
+        </button>
+
+        <div className="absolute right-4 bottom-4 flex items-end gap-1">
+          <span className="w-1.5 h-4 rounded-full bg-lime-300 animate-pulse" />
+          <span className="w-1.5 h-7 rounded-full bg-orange-300 animate-pulse" />
+          <span className="w-1.5 h-5 rounded-full bg-white animate-pulse" />
+          <span className="w-1.5 h-9 rounded-full bg-lime-300 animate-pulse" />
+        </div>
       </div>
 
       <div className="mb-4">
@@ -445,12 +475,12 @@ function Home() {
             key={track.id}
             type="button"
             onClick={() => handlePlay(track)}
-            className="w-full flex items-center gap-3 text-left rounded-xl hover:bg-white p-2 transition"
+            className="w-full flex items-center gap-3 text-left rounded-xl hover:bg-white p-2 transition group"
           >
             <img
               src={getTrackCoverUrl(track)}
               alt={track.title}
-              className="w-10 h-10 rounded-lg object-cover shrink-0"
+              className="w-10 h-10 rounded-lg object-cover shrink-0 group-hover:scale-105 transition"
             />
 
             <div className="min-w-0 flex-1">
@@ -463,7 +493,7 @@ function Home() {
               </p>
             </div>
 
-            <FaPlay className="text-xs text-slate-400 shrink-0" />
+            <FaPlay className="text-xs text-slate-400 group-hover:text-slate-950 shrink-0" />
           </button>
         ))}
       </div>
@@ -473,7 +503,7 @@ function Home() {
   return (
     <>
       <AppShell
-        title="Top 2026"
+        title="SoundWave"
         subtitle="Browse new music, playlists, and artists"
         activePage="browse"
         rightPanel={rightPanel}
@@ -482,7 +512,7 @@ function Home() {
         onSearchSubmit={(value) => setSearchQuery(value)}
         searchPlaceholder="Search songs, artists, countries, lyrics, playlists..."
       >
-        <div className="space-y-6 pb-10">
+        <div className="mx-auto w-full max-w-5xl space-y-7 pb-10">
           {(downloadError || likeError || discoveryError || error) && (
             <div className="space-y-3">
               {downloadError && (
@@ -702,73 +732,172 @@ function Home() {
 
           {!isSearching && (
             <>
-              <section className="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-r from-[#8b3f17] via-[#b85b21] to-[#30170d] min-h-[220px] shadow-xl">
-                <div className="absolute inset-0 bg-black/10" />
+              <section className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-r from-slate-950 via-[#7a310f] to-[#1b0d08] shadow-2xl">
+                <div className="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-orange-400/30 blur-3xl" />
+                <div className="absolute right-10 bottom-0 w-72 h-72 rounded-full bg-lime-300/20 blur-3xl" />
+                <div className="absolute right-1/3 top-10 w-52 h-52 rounded-full bg-white/10 blur-2xl" />
 
                 {heroTrack && (
                   <img
                     src={getTrackCoverUrl(heroTrack)}
                     alt={heroTrack.title}
-                    className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-65"
+                    className="absolute right-0 top-0 h-full w-full lg:w-[48%] object-cover opacity-30 lg:opacity-55"
                   />
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/25" />
 
-                <div className="relative p-5 sm:p-6 max-w-xl text-white">
-                  <p className="text-[10px] uppercase tracking-[0.25em] font-bold text-white/80 mb-4">
-                    Curated Playlist
-                  </p>
+                <div className="relative grid grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_300px] gap-6 p-5 sm:p-7 text-white">
+                  <div className="min-w-0 max-w-2xl mx-auto 2xl:mx-0">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur text-xs font-bold text-white/80 mb-5">
+                      <FaFire className="text-orange-300" />
+                      Live discovery mix
+                    </div>
 
-                  <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3">
-                    {featuredPlaylist?.name || 'Songs'}
-                  </h1>
+                    <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight mb-4 break-words">
+                      {featuredPlaylist?.name ||
+                        heroTrack?.title ||
+                        'Fresh SoundWave Mix'}
+                    </h1>
 
-                  <p className="text-white/80 max-w-md mb-5 text-sm sm:text-base leading-6">
-                    {featuredPlaylist?.description ||
-                      'Enjoy vivid emotions with a stunning music collection built for SoundWave listeners.'}
-                  </p>
+                    <p className="text-white/80 max-w-xl mb-6 text-sm sm:text-base leading-7 break-words">
+                      {featuredPlaylist?.description ||
+                        heroTrack?.lyrics ||
+                        'Discover trending tracks, popular artists, and playlists built around the SoundWave community.'}
+                    </p>
 
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-white/85">
-                    <span className="px-3 py-1 rounded-full bg-white/15 backdrop-blur">
-                      ♥ {featuredPlaylist?.total_likes || heroTrack?.like_count || 0}{' '}
-                      likes
-                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mb-6">
+                      <div className="rounded-2xl bg-white/15 backdrop-blur p-3 min-w-0">
+                        <p className="text-xl font-black">
+                          {tracks.length || 0}
+                        </p>
+                        <p className="text-xs text-white/65 mt-1">Tracks</p>
+                      </div>
 
-                    <span>
-                      {featuredPlaylist?.total_tracks || tracks.length || 0} songs
-                    </span>
+                      <div className="rounded-2xl bg-white/15 backdrop-blur p-3 min-w-0">
+                        <p className="text-xl font-black">
+                          {topArtists.length || 0}
+                        </p>
+                        <p className="text-xs text-white/65 mt-1">Artists</p>
+                      </div>
 
-                    <span>
-                      {featuredPlaylist?.total_plays || heroTrack?.play_count || 0}{' '}
-                      plays
-                    </span>
-                  </div>
+                      <div className="rounded-2xl bg-white/15 backdrop-blur p-3 min-w-0">
+                        <p className="text-xl font-black">
+                          {popularPlaylists.length || 0}
+                        </p>
+                        <p className="text-xs text-white/65 mt-1">Playlists</p>
+                      </div>
 
-                  <div className="flex flex-wrap gap-3 mt-5">
-                    {heroTrack && (
+                      <div className="rounded-2xl bg-white/15 backdrop-blur p-3 min-w-0">
+                        <p className="text-xl font-black">
+                          {heroTrack?.play_count || 0}
+                        </p>
+                        <p className="text-xs text-white/65 mt-1">Plays</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                      {heroTrack && (
+                        <button
+                          type="button"
+                          onClick={() => handlePlay(heroTrack)}
+                          className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-lime-300 text-slate-950 text-sm font-black hover:bg-lime-200 shadow-lg"
+                        >
+                          <FaPlay className="text-xs" />
+                          Play Featured
+                        </button>
+                      )}
+
                       <button
                         type="button"
-                        onClick={() => handlePlay(heroTrack)}
-                        className="px-4 py-2.5 rounded-full bg-lime-300 text-slate-950 text-sm font-bold hover:bg-lime-200"
+                        onClick={refreshDiscovery}
+                        className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/15 text-white text-sm font-bold hover:bg-white/25 backdrop-blur"
                       >
-                        Play Featured
+                        <FaRedoAlt />
+                        Refresh Mix
                       </button>
-                    )}
 
-                    <button
-                      type="button"
-                      onClick={refreshDiscovery}
-                      className="px-4 py-2.5 rounded-full bg-white/15 text-white text-sm font-bold hover:bg-white/25 backdrop-blur"
-                    >
-                      Refresh
-                    </button>
+                      <Link
+                        to="/artists"
+                        className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/15 text-white text-sm font-bold hover:bg-white/25 backdrop-blur"
+                      >
+                        Explore Artists
+                        <FaArrowRight className="text-xs" />
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="hidden 2xl:flex flex-col justify-end min-w-0">
+                    <div className="rounded-[1.5rem] bg-white/15 backdrop-blur border border-white/20 p-4 shadow-xl max-w-[300px]">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-11 h-11 rounded-2xl bg-lime-300 text-slate-950 flex items-center justify-center shrink-0">
+                          <FaCompactDisc className="animate-spin" />
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="text-xs text-white/60">
+                            Featured Track
+                          </p>
+                          <p className="font-black truncate">
+                            {heroTrack?.title || 'No track yet'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="relative rounded-2xl overflow-hidden">
+                        <img
+                          src={getTrackCoverUrl(heroTrack)}
+                          alt={heroTrack?.title || 'Featured track'}
+                          className="w-full h-40 object-cover"
+                        />
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+                        <div className="absolute left-4 bottom-4 right-4">
+                          <p className="text-sm font-bold truncate">
+                            {heroTrack?.artist_name || 'SoundWave'}
+                          </p>
+
+                          <div className="flex items-end gap-1 mt-3">
+                            <span className="w-1.5 h-4 rounded-full bg-lime-300 animate-pulse" />
+                            <span className="w-1.5 h-9 rounded-full bg-orange-300 animate-pulse" />
+                            <span className="w-1.5 h-6 rounded-full bg-white animate-pulse" />
+                            <span className="w-1.5 h-12 rounded-full bg-lime-300 animate-pulse" />
+                            <span className="w-1.5 h-7 rounded-full bg-orange-300 animate-pulse" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
 
+              <section className="rounded-[1.5rem] bg-white/85 backdrop-blur border border-white/60 shadow-sm p-4 overflow-hidden">
+                <div className="flex flex-wrap justify-center gap-3">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-950 text-white text-sm font-bold">
+                    <FaBolt className="text-lime-300" />
+                    Trending now
+                  </span>
+
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 text-orange-800 text-sm font-bold">
+                    <FaHeadphones />
+                    New uploads
+                  </span>
+
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lime-100 text-lime-800 text-sm font-bold">
+                    <FaStar />
+                    Artist spotlight
+                  </span>
+
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-bold">
+                    <FaSearch />
+                    Search by song, artist, country, lyrics
+                  </span>
+                </div>
+              </section>
+
               <section>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-xl font-black text-slate-950">
                       Popular artists
@@ -797,27 +926,33 @@ function Home() {
                     actionTo="/artists"
                   />
                 ) : (
-                  <div className="flex gap-4 overflow-x-auto pb-2">
-                    {topArtists.slice(0, 6).map((artist) => (
+                  <div className="flex gap-4 overflow-x-auto pb-3">
+                    {topArtists.slice(0, 8).map((artist, index) => (
                       <Link
                         key={artist.id}
                         to={`/artist/${artist.id}`}
-                        className="group min-w-[105px] text-center"
+                        className="group min-w-[150px] rounded-[1.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl p-4 text-center transition"
                       >
-                        <div className="w-20 h-20 mx-auto rounded-full overflow-hidden bg-slate-200 shadow-sm group-hover:scale-105 transition">
+                        <div className="relative w-24 h-24 mx-auto rounded-full overflow-hidden bg-slate-200 shadow-sm group-hover:scale-105 transition">
                           <img
                             src={getArtistAvatarUrl(artist)}
                             alt={artist.display_name}
                             className="w-full h-full object-cover"
                           />
+
+                          <div className="absolute inset-0 ring-4 ring-white/50 rounded-full" />
                         </div>
 
-                        <p className="font-bold text-slate-950 text-sm mt-2 truncate">
+                        <p className="font-black text-slate-950 text-sm mt-3 truncate">
                           {artist.display_name}
                         </p>
 
                         <p className="text-xs text-slate-500 truncate">
                           {artist.country || 'SoundWave'}
+                        </p>
+
+                        <p className="text-[11px] text-orange-700 font-bold mt-2">
+                          #{index + 1} Trending
                         </p>
                       </Link>
                     ))}
@@ -826,7 +961,7 @@ function Home() {
               </section>
 
               <section>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-xl font-black text-slate-950">
                       Recently played
@@ -840,8 +975,9 @@ function Home() {
                   <button
                     type="button"
                     onClick={refreshTracks}
-                    className="text-sm font-bold text-slate-500 hover:text-slate-950"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-950"
                   >
+                    <FaRedoAlt />
                     Refresh
                   </button>
                 </div>
@@ -862,7 +998,7 @@ function Home() {
                     {tracks.slice(0, 8).map((track, index) => (
                       <div
                         key={track.id}
-                        className="group flex items-center gap-3 rounded-2xl bg-white hover:bg-slate-100 border border-slate-100 px-3 py-2.5 transition"
+                        className="group flex items-center gap-3 rounded-2xl bg-white/95 hover:bg-slate-100 border border-slate-100 px-3 py-2.5 transition hover:shadow-md"
                       >
                         <button
                           type="button"
@@ -877,7 +1013,7 @@ function Home() {
                         <img
                           src={getTrackCoverUrl(track)}
                           alt={track.title}
-                          className="w-11 h-11 rounded-xl object-cover shrink-0"
+                          className="w-11 h-11 rounded-xl object-cover shrink-0 group-hover:scale-105 transition"
                         />
 
                         <div className="min-w-0 flex-1">
@@ -925,7 +1061,7 @@ function Home() {
                 )}
 
                 {!isLoading && !error && tracks.length > 8 && (
-                  <div className="mt-5">
+                  <div className="mt-6">
                     <h3 className="text-lg font-black text-slate-950 mb-3">
                       More tracks
                     </h3>
